@@ -36,8 +36,8 @@ namespace AutoPasTest.Controller
             var result = await _controller.GetPolicyNumber(username);
 
             // Assert
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            okResult.Value.Should().Be(policyNumber);
+            result.Should().BeOfType<OkObjectResult>().Subject.Value
+                .Should().Be(policyNumber);
         }
 
         [Fact]
@@ -51,8 +51,8 @@ namespace AutoPasTest.Controller
             var result = await _controller.GetPolicyNumber(username);
 
             // Assert
-            var okResult = result.Should().BeOfType<OkObjectResult>().Subject;
-            okResult.Value.Should().BeNull();
+            result.Should().BeOfType<OkObjectResult>().Subject.Value
+                .Should().BeNull();
         }
 
         [Fact]
@@ -72,51 +72,8 @@ namespace AutoPasTest.Controller
                                .Should().BeEquivalentTo(exception);
         }
     
-    /*        [Fact]
-            public async Task GetPolicyNumber_ReturnsOk_WhenPolicyNumberIsNotNull()
-            {
-                // Arrange
-                var policyNumber = _fixture.Create<IEnumerable<int>>();
-                _policyServiceMock.Setup(s => s.GetPolicyNumber()).ReturnsAsync(policyNumber);
-
-                // Act
-                var result = await _controller.GetPolicyNumber();
-
-                // Assert
-                result.Should().BeOfType<OkObjectResult>().Subject.Value
-                    .Should().Be(policyNumber);
-            }
-
-            [Fact]
-            public async Task GetPolicyNumber_ReturnsOkWithMessage_WhenPolicyNumberIsNull()
-            {
-                // Arrange
-                _policyServiceMock.Setup(s => s.GetPolicyNumber()).ReturnsAsync((IEnumerable<int>)null);
-
-                // Act
-                var result = await _controller.GetPolicyNumber();
-
-                // Assert
-                result.Should().BeOfType<OkObjectResult>().Subject.Value
-                    .Should().BeEquivalentTo(new { message = "Empty" });
-            }
-
-            [Fact]
-            public async Task GetPolicyNumber_ReturnsInternalServerError_OnException()
-            {
-                // Arrange
-                var exception = _fixture.Create<Exception>();
-
-                _policyServiceMock.Setup(s => s.GetPolicyNumber()).ThrowsAsync(exception);
-
-                // Act
-                var result = await _controller.GetPolicyNumber();
-
-                // Assert
-                result.Should().BeOfType<BadRequestObjectResult>().Subject.Value
-                    .Should().BeEquivalentTo(exception);
-            }*/
-    [Fact]
+   
+        [Fact]
         public async Task GetPolicyDetailsByPolicyNumber_ReturnsOk_WhenPolicyDetailsFound()
         {
             // Arrange
