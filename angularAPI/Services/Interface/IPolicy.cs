@@ -5,17 +5,11 @@ namespace angularAPI.Services.Interface
 {
     public interface IPolicy
     {
-        public  Task<bool> validatePolicyChassisNumber(PolicyDto policydto);
-        public Task<bool> addUserPolicyDetails(PolicyListDto policyListDto);
-        public Task<IEnumerable<int>> getPolicyNumber();
-        public Task<object> getPolicyDetailsByPolicyNumber(int policynumber);
-        public Task<bool> removePolicyDetails(int policynumber);
-        public Task<bool> login(portaluser portaluser);
-        public  Task<portaluser> getId();
-
-
-
-
-
+        public  Task<String> ValidatePolicyChassisNumber(PolicyDto policydto);
+        public Task<bool> AddUserPolicyDetails(PolicyListDto policyListDto);
+        public  Task<List<int>> GetPolicyNumberByUserId(string username);
+        public Task<object> GetPolicyDetailsByPolicyNumber(int policynumber);
+        public Task<bool> RemovePolicyDetails(int policynumber);
+        public Task<bool> Login(portaluser portaluser);
     }
 }

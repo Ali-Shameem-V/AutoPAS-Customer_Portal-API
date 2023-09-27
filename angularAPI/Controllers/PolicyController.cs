@@ -15,30 +15,30 @@ namespace angularAPI.Controllers
         {
             _policy = policy;
         }
-        [HttpGet]
-        public async Task<IActionResult> GetPolicyNumber()
+        [HttpGet("{username}")]
+        public async Task<IActionResult> GetPolicyNumber(string username)
         {
             try
             {
-                var policy_number = await _policy.getPolicyNumber();
+                var policy_number = await _policy.GetPolicyNumberByUserId(username);
                 if (policy_number == null)
                 {
-                    return Ok(new { message = "Empty" });
+                    return Ok(null);
                 }
                 return Ok(policy_number);
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(StatusCodes.Status500InternalServerError);
+                return BadRequest(ex);
             }
         }
 
-        [HttpGet("policynumber")]
-        public async Task<ActionResult> GetPolicyDetailsByPolicyNumber(int policynumber)
+        [HttpGet("policyDetails/{policynumber}")]
+        public async Task<ActionResult> GetPolicyDetailsByPolicyNumber([FromRoute] int policynumber)
         {
             try
             {
-                var policyDetails = await _policy.getPolicyDetailsByPolicyNumber(policynumber);
+                var policyDetails = await _policy.GetPolicyDetailsByPolicyNumber(policynumber);
                 if (policyDetails == null)
                 {
                     return NotFound(); 
@@ -46,106 +46,101 @@ namespace angularAPI.Controllers
 
                 return Ok(policyDetails); 
             }
-            catch 
+            catch (Exception ex)
             {
-                return StatusCode(500);
+                return BadRequest(ex);
             }
         }
-
-        [HttpGet("user/details")]
-        public async Task<IActionResult> GetAll()
-        {
-            try
-            {
-                var portal_user = await _policy.getId();
-                if (portal_user != null)
-                {
-                    return Ok(portal_user);
-                }
-                return NotFound();
-            }
-            catch 
-            {
-                return StatusCode(500);
-            }
-        }
-
+     
         [HttpPost]
         [Route("validate")]
-        public async Task<IActionResult> ValidateChassisPolicyNumber(PolicyDto policyDTO)
+        public async Task<IActionResult> ValidateChassisPolicyNumber([FromBody] PolicyDto policyDTO)
         {
             try
             {
-                var portal_user = await _policy.validatePolicyChassisNumber(policyDTO);
+                var portal_user = await _policy.ValidatePolicyChassisNumber(policyDTO);
 
-                if (portal_user == false)
+                if (portal_user == "Invalid Chassis Number")
                 {
-                    return Ok(false);
+                    return Ok(new { message = "Invalid Chassis" });
                 }
+                else if (portal_user == "Invalid Policy Number")
+                {
+                    return Ok(new { message = "Invalid Policy" });
+                }
+                else if (portal_user == "Invalid Policy & Chassis Number")
+                {
+                    return Ok(new { message = "Invalid Policy & Chassis" });
 
-                return Ok(true);
+                }
+                else
+                {
+                    return Ok(new { message = "Valid"});
+
+                }
             }
-            catch 
+            catch (Exception ex)
             {
-                return StatusCode(500);
+                return BadRequest(ex);
             }
         }
 
 
         [HttpPost]
         [Route("Add")]
-        public async Task<IActionResult> AddUserPolicyDetails(PolicyListDto policyListDto)
+        public async Task<IActionResult> AddUserPolicyDetails([FromBody] PolicyListDto policyListDto)
         {
             try
             {
-                var user_policy = await _policy.addUserPolicyDetails(policyListDto);
+                var user_policy = await _policy.AddUserPolicyDetails(policyListDto);
                 if (user_policy == false)
                 {
                     return BadRequest();
                 }
                 return Ok(user_policy);
             }
-            catch 
+            catch (Exception  ex) 
             {
-                return StatusCode(500);
+                return BadRequest(ex);
             }
         }
 
-        [HttpDelete("policy")]
-        public async Task<IActionResult> RemovePolicyDetails(int policynumber)
+
+        [HttpDelete("policy/{policynumber}")]
+        public async Task<IActionResult> RemovePolicyDetails([FromRoute] int policynumber)
         {
             try
             {
-                var policy_details = await _policy.removePolicyDetails(policynumber);
+                var policy_details = await _policy.RemovePolicyDetails(policynumber);
                 if (policy_details == false)
                 {
                     return Ok(false);
                 }
                 return Ok(true);
             }
-            catch 
+            catch (Exception ex)
             {
-                return StatusCode(500);
+                return BadRequest(ex);
             }
         }
 
 
 
         [HttpPost]
-        public async Task<IActionResult> AddUser(portaluser portaluser)
+        public async Task<IActionResult> AddUser( [FromBody] portaluser portaluser)
         {
             try
             {
-                var portal_user = await _policy.login(portaluser);
+                var portal_user = await _policy.Login(portaluser);
                 if (portal_user == false)
                 {
                     return Ok(false);
                 }
                 return Ok(true);
             }
-            catch
+            catch (Exception ex)
             {
-                return StatusCode(500);
+                return BadRequest(ex);
             }
         }
 

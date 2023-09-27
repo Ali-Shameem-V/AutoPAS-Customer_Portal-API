@@ -17,27 +17,36 @@ namespace angularAPI.Services
             _demoContext = demoContext;
             _AutoPortalDbContext = autoPortalDbContext;
         }
-        public async Task<bool> validatePolicyChassisNumber(PolicyDto policydto)
+        //2
+        public async Task<String> ValidatePolicyChassisNumber(PolicyDto policydto)
         {
-            var policy = await _demoContext.Policies.Where(u => u.PolicyNumber == policydto.PolicyNumber).FirstOrDefaultAsync();
+            
+                var policy_detail = await _demoContext.Policies.Where(u => u.PolicyNumber == policydto.PolicyNumber).FirstOrDefaultAsync();
+                var vehicle_detail = await _demoContext.Vehicles.Where(c => c.ChasisNumber == policydto.ChasisNumber).FirstOrDefaultAsync();
 
-            if (policy != null)
-            {
-                var chassis_valid = await _demoContext.Vehicles.Where(c=>c.ChasisNumber==policydto.ChasisNumber).FirstOrDefaultAsync();
-                string policyNumberAsString = policydto.PolicyNumber.ToString();
-
-                if (chassis_valid != null && policyNumberAsString.Length<10)
+                if (policy_detail != null)
                 {
+                    //string policyNumberAsString = policydto.PolicyNumber.ToString();
 
-                    
-                    return true;
+                    if (vehicle_detail != null)
+                    {
+                        return "Valid";
+                    }
+                    return "Invalid Chassis Number";
                 }
-                return false;
-            }
-            return false;
+                else if(policy_detail==null && vehicle_detail==null)
+                     {
+                        return "Invalid Policy & Chassis Number";
+                     }
+                else
+                     {
+                     return "Invalid Policy Number";
+                     }
+
 
         }
-        public async Task<bool> addUserPolicyDetails(PolicyListDto policyListDto)
+        //3
+        public async Task<bool> AddUserPolicyDetails(PolicyListDto policyListDto)
         {
             var user = await _AutoPortalDbContext.portalusers.FirstOrDefaultAsync(o=>o.UserName==policyListDto.UserName);
             if (user != null)
@@ -58,7 +67,8 @@ namespace angularAPI.Services
                 return false;
             }
         }
-        public async Task<IEnumerable<int>> getPolicyNumber()
+        //6npass user ID
+        /*public async Task<IEnumerable<int>> GetPolicyNumber()
         {
             var user_policy = await _AutoPortalDbContext.userpolicylists.Select(o=>o.PolicyNumber).ToListAsync();
             if(user_policy.Any())
@@ -68,8 +78,28 @@ namespace angularAPI.Services
             }
             return null;
 
+        }*/
+        public async Task<List<int>> GetPolicyNumberByUserId(string username)
+        {
+            var policy_numbers = await _AutoPortalDbContext.portalusers
+                .Where(pol => pol.UserName == username)
+                .Join(
+                    _AutoPortalDbContext.userpolicylists,
+                    pol => pol.UserId,
+                    polins => polins.UserId,
+                    (pol, polins) => polins.PolicyNumber)
+                    .ToListAsync();
+
+
+            if (policy_numbers.Any())
+            {
+                return policy_numbers;
+            }
+            return null;
+
         }
-        public async Task<object> getPolicyDetailsByPolicyNumber(int policynumber )
+        //4
+        public async Task<object> GetPolicyDetailsByPolicyNumber(int policynumber)
         {
             var policy_details=await _demoContext.Policies.FirstOrDefaultAsync(o=>o.PolicyNumber==policynumber);
             if(policy_details==null)
@@ -91,7 +121,8 @@ namespace angularAPI.Services
             }
             
         }
-        public async Task<bool> removePolicyDetails(int policynumber)
+        //5
+        public async Task<bool> RemovePolicyDetails(int policynumber)
         {
             var policy_details = await _AutoPortalDbContext.userpolicylists.FirstOrDefaultAsync(o=>o.PolicyNumber==policynumber);
             if(policy_details==null)
@@ -106,7 +137,8 @@ namespace angularAPI.Services
             }
             
         }
-        public async Task<bool> login(portaluser portaluser)
+        //1
+        public async Task<bool> Login(portaluser portaluser)
         {
             var portal_user = await _AutoPortalDbContext.portalusers.Where(u => u.UserName == portaluser.UserName && u.Password == portaluser.Password).FirstOrDefaultAsync();
             if (portal_user != null)
@@ -115,16 +147,6 @@ namespace angularAPI.Services
             }
             return false;
 
-        }
-        public async Task<portaluser> getId()
-        {
-            var portal_user = await _AutoPortalDbContext.portalusers.FirstOrDefaultAsync();
-            if (portal_user != null)
-            {
-                return portal_user;
-            }
-            return null;
-        }
-       
+        }       
     }
 }
