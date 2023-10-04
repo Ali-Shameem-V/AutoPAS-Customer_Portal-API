@@ -60,16 +60,15 @@ namespace AutoPasTest.Controller
         {
             // Arrange
             var username = _fixture.Create<string>();
-            var exception = _fixture.Create<Exception>();
 
-            _policyServiceMock.Setup(s => s.GetPolicyNumberByUserId(username)).ThrowsAsync(exception);
+            _policyServiceMock.Setup(s => s.GetPolicyNumberByUserId(username)).ThrowsAsync(new Exception("An Error Occured"));
 
             // Act
             var result = await _controller.GetPolicyNumber(username);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value
-                               .Should().BeEquivalentTo(exception);
+                               .Should().BeEquivalentTo("An Error Occured");
         }
     
    
@@ -107,17 +106,17 @@ namespace AutoPasTest.Controller
         public async Task GetPolicyDetailsByPolicyNumber_ReturnsInternalServerError_OnException()
         {
             // Arrange
-            var exception = _fixture.Create<Exception>();
+
 
             var policyNumber = _fixture.Create<int>();
-            _policyServiceMock.Setup(s => s.GetPolicyDetailsByPolicyNumber(policyNumber)).ThrowsAsync(exception);
+            _policyServiceMock.Setup(s => s.GetPolicyDetailsByPolicyNumber(policyNumber)).ThrowsAsync(new Exception("An Error Occured"));
 
             // Act
             var result = await _controller.GetPolicyDetailsByPolicyNumber(policyNumber);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value
-                            .Should().BeEquivalentTo(exception);
+                            .Should().BeEquivalentTo("An Error Occured");
         }
        
        [Fact]
@@ -184,17 +183,16 @@ namespace AutoPasTest.Controller
         public async Task ValidateChassisPolicyNumber_ReturnsInternalServerError_OnException()
         {
             // Arrange
-            var exception = _fixture.Create<Exception>();
 
             var policyDto = _fixture.Create<PolicyDto>();
-            _policyServiceMock.Setup(s => s.ValidatePolicyChassisNumber(policyDto)).ThrowsAsync(exception);
+            _policyServiceMock.Setup(s => s.ValidatePolicyChassisNumber(policyDto)).ThrowsAsync(new Exception("An Error Occured"));
 
             // Act
             var result = await _controller.ValidateChassisPolicyNumber(policyDto);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value
-                .Should().BeEquivalentTo(exception);
+                .Should().BeEquivalentTo("An Error Occured");
         }
 
 
@@ -233,15 +231,15 @@ namespace AutoPasTest.Controller
         {
             // Arrange
             var policyListDto = _fixture.Create<PolicyListDto>();
-            var exception = _fixture.Create<Exception>();
-            _policyServiceMock.Setup(s => s.AddUserPolicyDetails(policyListDto)).ThrowsAsync(exception);
+
+            _policyServiceMock.Setup(s => s.AddUserPolicyDetails(policyListDto)).ThrowsAsync(new Exception("An Error Occured"));
 
             // Act
             var result = await _controller.AddUserPolicyDetails(policyListDto);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value
-                .Should().BeEquivalentTo(exception);
+                .Should().BeEquivalentTo("An Error Occured");
         }
         [Fact]
         public async Task RemovePolicyDetails_ReturnsOk_WhenPolicyDetailsRemoved()
@@ -277,17 +275,17 @@ namespace AutoPasTest.Controller
         public async Task RemovePolicyDetails_ReturnsInternalServerError_OnException()
         {
             // Arrange
-            var exception = _fixture.Create<Exception>();
+
 
             var policyNumber = _fixture.Create<int>();
-            _policyServiceMock.Setup(s => s.RemovePolicyDetails(policyNumber)).ThrowsAsync(exception);
+            _policyServiceMock.Setup(s => s.RemovePolicyDetails(policyNumber)).ThrowsAsync(new Exception("An Error Occured"));
 
             // Act
             var result = await _controller.RemovePolicyDetails(policyNumber);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value
-                            .Should().BeEquivalentTo(exception);
+                            .Should().BeEquivalentTo("An Error Occured");
         }
         [Fact]
         public async Task AddUser_ReturnsOk_WhenUserAdded()
@@ -323,17 +321,17 @@ namespace AutoPasTest.Controller
         public async Task AddUser_ReturnsInternalServerError_OnException()
         {
             // Arrange
-            var exception = _fixture.Create<Exception>();
+
 
             var portalUser = _fixture.Create<portaluser>();
-            _policyServiceMock.Setup(s => s.Login(portalUser)).ThrowsAsync(exception);
+            _policyServiceMock.Setup(s => s.Login(portalUser)).ThrowsAsync(new Exception("An Error Occured"));
 
             // Act
             var result = await _controller.AddUser(portalUser);
 
             // Assert
             result.Should().BeOfType<BadRequestObjectResult>().Subject.Value
-                 .Should().BeEquivalentTo(exception);
+                 .Should().BeEquivalentTo("An Error Occured");
         }
     }
 }

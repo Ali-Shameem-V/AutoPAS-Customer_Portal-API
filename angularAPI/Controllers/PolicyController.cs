@@ -16,7 +16,7 @@ namespace angularAPI.Controllers
             _policy = policy;
         }
         [HttpGet("{username}")]
-        public async Task<IActionResult> GetPolicyNumber(string username)
+        public async Task<IActionResult> GetPolicyNumber([FromRoute] string username)
         {
             try
             {
@@ -27,9 +27,9 @@ namespace angularAPI.Controllers
                 }
                 return Ok(policy_number);
             }
-            catch (Exception ex)
+            catch 
             {
-                return BadRequest(ex);
+                return BadRequest("An Error Occured");
             }
         }
 
@@ -46,9 +46,9 @@ namespace angularAPI.Controllers
 
                 return Ok(policyDetails); 
             }
-            catch (Exception ex)
+            catch 
             {
-                return BadRequest(ex);
+                return BadRequest("An Error Occured");
             }
         }
      
@@ -79,9 +79,9 @@ namespace angularAPI.Controllers
 
                 }
             }
-            catch (Exception ex)
+            catch 
             {
-                return BadRequest(ex);
+                return BadRequest("An Error Occured");
             }
         }
 
@@ -99,9 +99,9 @@ namespace angularAPI.Controllers
                 }
                 return Ok(user_policy);
             }
-            catch (Exception  ex) 
+            catch
             {
-                return BadRequest(ex);
+                return BadRequest("An Error Occured");
             }
         }
 
@@ -118,9 +118,9 @@ namespace angularAPI.Controllers
                 }
                 return Ok(true);
             }
-            catch (Exception ex)
+            catch 
             {
-                return BadRequest(ex);
+                return BadRequest("An Error Occured");
             }
         }
 
@@ -138,9 +138,9 @@ namespace angularAPI.Controllers
                 }
                 return Ok(true);
             }
-            catch (Exception ex)
+            catch 
             {
-                return BadRequest(ex);
+                return BadRequest("An Error Occured");
             }
         }
 
